@@ -1,0 +1,20 @@
+{
+  "name": "dsu-menu-parser",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "crawler-request": "^1.2.2",
+    "pdf-parse": "^1.1.1",
+    "rbush": "^3.0.1"
+  },
+  "devDependencies": {
+    "jimp": "^0.16.1"
+  }
+}
