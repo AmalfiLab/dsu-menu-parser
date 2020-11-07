@@ -10,11 +10,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@dagrejs/graphlib": "^2.1.4",
     "crawler-request": "^1.2.2",
     "pdf-parse": "^1.1.1",
     "rbush": "^3.0.1"
   },
   "devDependencies": {
-    "jimp": "^0.16.1"
+    "jimp": "^0.16.1",
+    "kd.tree": "^0.1.3",
+    "pdf2json": "^1.2.0"
   }
 }
