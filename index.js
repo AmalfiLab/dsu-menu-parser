@@ -1,70 +1,18 @@
-const pdf = require('pdf-parse');
 const PDFParser = require("pdf2json");
 const graphlib = require('@dagrejs/graphlib');
 const fs = require('fs');
-const { getMeatBoxes } = require('./src/constants');
 const Rectangle = require('./src/rectangle');
-
-function renderPage(pageData) {
-  const renderOptions = {
-    normalizeWhitespace: false,
-    disableCombineTextItems: false
-  };
-
-  console.log(pageData.getTextContent);
-
-  return pageData.getTextContent(renderOptions).then(textContent => {
-    let textArray = [];
-    let text = {
-      str: '',
-      y: null,
-      xStart: null,
-      xEnd: null
-    };
-    
-    for (let item of textContent.items) {
-      if (text.y !== null && text.y != item.transform[5]) {
-        textArray.push({ ...text });
-        text.str = '';
-        text.y = null;
-        text.xStart = null;
-        text.xEnd = null;
-      }
-
-      text.str += item.str;
-      if (text.xStart === null)
-        text.xStart = item.transform[4];
-      text.xEnd = item.transform[4] + item.width;
-      text.y = item.transform[5];
-    }
-    return JSON.stringify(textArray);
-  });
-}
-
-const pdfParseOptions = {
-  pagerender: renderPage
-}
-
-
 
 function findTextInBox(texts, box) {
   let output = []
   for (const t of texts) {
-    if (t.str.startsWith("Coscia"))
-      console.log("coscia", t);
     if (t.y >= box.yStart && t.y <= box.yEnd &&
         t.x >= box.xStart && t.x <= box.xEnd) {
       output.push({ ...t });
     }
   }
 
-  console.log("box", box);
-  console.log("output", output)
   return output;
-}
-
-function parseMenu(text, dayOfWeek, mealOfDay) {
-  
 }
 
 function loadPdf(path) {
@@ -198,31 +146,6 @@ function loadText(pdfData) {
     w: t.w,
     str: decodeURIComponent(t.R[0].T)
   }));
-  
-  let textArray = [];
-  let text = {
-    str: '',
-    y: null,
-    xStart: null,
-    xEnd: null
-  };
-  
-  for (let t of pdfData.formImage.Pages[0].Texts) {
-    if (text.y !== null && text.y != t.y) {
-      textArray.push({ ...text });
-      text.str = '';
-      text.y = null;
-      text.xStart = null;
-      text.xEnd = null;
-    }
-
-    text.str +=  decodeURIComponent(t.R[0].T);
-    if (text.xStart === null)
-      text.xStart = t.x;
-    text.xEnd = t.x + t.w;
-    text.y = t.y;
-  }
-  return textArray;
 }
 
 class MenuParser {
@@ -233,15 +156,6 @@ class MenuParser {
   }
 
   async _load() {
-    /*
-    const dataBuffer = await fs.promises.readFile(this.uri);
-    const data = await pdf(dataBuffer, pdfParseOptions);
-    this.data = data;
-    this.items = JSON.parse(data.text);
-    
-    const ref = await this._getReferencePt();
-    this.boxes = getMeatBoxes(ref[0], ref[1]);
-    */
     const pdfData = await loadPdf(this.uri);
     this.grid = loadGrid(pdfData,
         this.options.grid.rows, this.options.grid.cols);
@@ -251,6 +165,8 @@ class MenuParser {
 
   _cleanText(text) {
     let cleanedText = text.replace(/\s+/g, " ");
+    cleanedText = cleanedText.replace("PIZZA", "Pizza");
+    cleanedText = cleanedText.replace("CALZONE", "Calzone");
     cleanedText = cleanedText.replace(/([a-z])([A-Z])/g, (match, p1, p2) => {
       return `${p1} ${p2}`;
     });
@@ -270,19 +186,9 @@ class MenuParser {
     const j = dayOfWeek;
     
     const dayItems = findTextInBox(this.texts, this.grid[i][j]);
-    
     const boxText = dayItems.reduce((prev, cur) => (prev + cur.str), "");
-    
     const cleanedText = this._cleanText(boxText);
     return cleanedText;
-  }
-
-  async getDebug() {
-    if (!this.loaded) {
-      await this._load();
-    }
-
-    return { items: this.items, data: this.data, boxes: this.boxes };
   }
 };
 
