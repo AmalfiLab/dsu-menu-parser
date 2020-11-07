@@ -2,7 +2,7 @@
 
 ## Example
 
-```
+```js
 const { MenuParser, options } = require('dsu-menu-parser');
 
 const parser = new MenuParser(path, options.martiri);
