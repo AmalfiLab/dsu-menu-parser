@@ -1,14 +1,14 @@
 {
   "name": "dsu-menu-parser",
-  "version": "1.0.0",
+  "version": "1.0.0-beta.1",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Andrea Giove (andreagiove@outlook.com)",
+  "license": "MIT",
   "dependencies": {
     "@dagrejs/graphlib": "^2.1.4",
     "crawler-request": "^1.2.2",
