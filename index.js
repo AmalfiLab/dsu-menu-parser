@@ -3,6 +3,12 @@ const graphlib = require('@dagrejs/graphlib');
 const fs = require('fs');
 const Rectangle = require('./src/rectangle');
 
+const options = {
+  martiri: {
+    grid: { rows: 2, cols: 7 }
+  }
+}
+
 function findTextInBox(texts, box) {
   let output = []
   for (const t of texts) {
@@ -148,6 +154,17 @@ function loadText(pdfData) {
   }));
 }
 
+function cleanText(text) {
+  let cleanedText = text.replace(/\s+/g, " ");
+  cleanedText = cleanedText.replace("PIZZA", "Pizza");
+  cleanedText = cleanedText.replace("CALZONE", "Calzone");
+  cleanedText = cleanedText.replace(/([a-z])([A-Z])/g, (match, p1, p2) => {
+    return `${p1} ${p2}`;
+  });
+
+  return cleanedText;
+}
+
 class MenuParser {
   constructor(uri, options) {
     this.uri = uri;
@@ -163,17 +180,6 @@ class MenuParser {
     this.loaded = true;
   }
 
-  _cleanText(text) {
-    let cleanedText = text.replace(/\s+/g, " ");
-    cleanedText = cleanedText.replace("PIZZA", "Pizza");
-    cleanedText = cleanedText.replace("CALZONE", "Calzone");
-    cleanedText = cleanedText.replace(/([a-z])([A-Z])/g, (match, p1, p2) => {
-      return `${p1} ${p2}`;
-    });
-
-    return cleanedText;
-  }
-
   async getMenu(dayOfWeek, mealOfDay) {
     if (['launch', 'dinner'].indexOf(mealOfDay) == -1)
       throw 'Invalid mealOfDay';
@@ -187,11 +193,12 @@ class MenuParser {
     
     const dayItems = findTextInBox(this.texts, this.grid[i][j]);
     const boxText = dayItems.reduce((prev, cur) => (prev + cur.str), "");
-    const cleanedText = this._cleanText(boxText);
+    const cleanedText = cleanText(boxText);
     return cleanedText;
   }
 };
 
 module.exports = {
-  MenuParser
+  MenuParser,
+  options
 };
