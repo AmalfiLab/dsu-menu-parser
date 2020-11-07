@@ -1,5 +1,5 @@
 {
-  "name": "dsu-menu-parser",
+  "name": "@amalfilab/dsu-menu-parser",
   "version": "1.0.0-beta.1",
   "description": "",
   "main": "index.js",
@@ -16,5 +16,6 @@
   },
   "devDependencies": {
     "jimp": "^0.16.1"
-  }
+  },
+  "publishConfig": { "registry": "https://npm.pkg.github.com/" }
 }
