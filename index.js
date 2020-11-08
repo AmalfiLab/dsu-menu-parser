@@ -21,12 +21,21 @@ function findTextInBox(texts, box) {
   return output;
 }
 
-function loadPdf(path) {
+function loadPdf(input) {
+  const isString = (typeof input === 'string' || input instanceof String);
+  const isBuffer = (input instanceof Buffer);
+  if (!isString && !isBuffer) {
+    throw 'input must be a string path or a buffer';
+  }
+
   return new Promise((resolve, reject) => {
     const pdfParser = new PDFParser();
     pdfParser.on("pdfParser_dataError", reject);
     pdfParser.on("pdfParser_dataReady", resolve);
-    pdfParser.loadPDF(path);
+    if (isString)
+      pdfParser.loadPDF(input);
+    else
+      pdfParser.parseBuffer(input);
   });
 }
 
@@ -166,14 +175,20 @@ function cleanText(text) {
 }
 
 class MenuParser {
-  constructor(uri, options) {
-    this.uri = uri;
+  constructor(input, options) {
+    const isString = (typeof input === 'string' || input instanceof String);
+    const isBuffer = (input instanceof Buffer);
+    if (!isString && !isBuffer) {
+      throw 'input must be a string path or a buffer';
+    }
+
+    this.input = input;
     this.options = options;
     this.loaded = false;
   }
 
   async _load() {
-    const pdfData = await loadPdf(this.uri);
+    const pdfData = await loadPdf(this.input);
     this.grid = loadGrid(pdfData,
         this.options.grid.rows, this.options.grid.cols);
     this.texts = loadText(pdfData);
