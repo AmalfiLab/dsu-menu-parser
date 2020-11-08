@@ -154,7 +154,6 @@ function loadGrid(pdfData, rows, cols) {
 }
 
 function loadText(pdfData) {
-  console.log("loadText");
   return pdfData.formImage.Pages[0].Texts.map(t => ({
     x: t.x,
     y: t.y + 0.2,
