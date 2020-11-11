@@ -162,15 +162,17 @@ function loadText(pdfData) {
   }));
 }
 
-function cleanText(text) {
+function splitText(text) {
   let cleanedText = text.replace(/\s+/g, " ");
   cleanedText = cleanedText.replace("PIZZA", "Pizza");
   cleanedText = cleanedText.replace("CALZONE", "Calzone");
-  cleanedText = cleanedText.replace(/([a-z])([A-Z])/g, (match, p1, p2) => {
-    return `${p1} ${p2}`;
+  console.log("clean", cleanedText);
+  const pattern = /([a-z\u00E0-\u00FF])\s?([A-Z])/g
+  cleanedText = cleanedText.replace(pattern, (match, p1, p2) => {
+    return `${p1};${p2}`;
   });
 
-  return cleanedText;
+  return cleanedText.split(';');
 }
 
 class MenuParser {
@@ -207,7 +209,7 @@ class MenuParser {
     
     const dayItems = findTextInBox(this.texts, this.grid[i][j]);
     const boxText = dayItems.reduce((prev, cur) => (prev + cur.str), "");
-    const cleanedText = cleanText(boxText);
+    const cleanedText = splitText(boxText);
     return cleanedText;
   }
 };
