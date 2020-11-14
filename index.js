@@ -166,7 +166,6 @@ function splitText(text) {
   let cleanedText = text.replace(/\s+/g, " ");
   cleanedText = cleanedText.replace("PIZZA", "Pizza");
   cleanedText = cleanedText.replace("CALZONE", "Calzone");
-  console.log("clean", cleanedText);
   const pattern = /([a-z\u00E0-\u00FF])\s?([A-Z])/g
   cleanedText = cleanedText.replace(pattern, (match, p1, p2) => {
     return `${p1};${p2}`;
