@@ -5,7 +5,19 @@ const Rectangle = require('./src/rectangle');
 
 const options = {
   martiri: {
-    grid: { rows: 2, cols: 7 }
+    grid: { rows: 2, cols: 7 },
+    dinner: true,
+    openDays: [0, 1, 2, 3, 4, 5, 6]
+  },
+  rosellini: {
+    grid: { rows: 1, cols: 5 },
+    dinner: false,
+    openDays: [1, 2, 3, 4, 5]
+  },
+  betti: {
+    grid: { rows: 2, cols: 5 },
+    dinner: true,
+    openDays: [1, 2, 3, 4, 5]
   }
 }
 
@@ -206,6 +218,8 @@ class MenuParser {
   async getMenu(dayOfWeek, mealOfDay) {
     if (['launch', 'dinner'].indexOf(mealOfDay) == -1)
       throw 'Invalid mealOfDay';
+    if (this.options.dinner == false && mealOfDay == 'dinner')
+      throw 'The dinner menu is not available for this canteen';
 
     if (!this.loaded) {
       await this._load();
