@@ -9,11 +9,14 @@ const options = {
   }
 }
 
+const minFontSize = 5;
+
 function findTextInBox(texts, box) {
   let output = []
   for (const t of texts) {
     if (t.y >= box.yStart && t.y <= box.yEnd &&
-        t.x >= box.xStart && t.x <= box.xEnd) {
+        t.x >= box.xStart && t.x <= box.xEnd &&
+        t.fontSize > minFontSize) {
       output.push({ ...t });
     }
   }
@@ -156,12 +159,15 @@ function loadGrid(pdfData, rows, cols) {
 }
 
 function loadText(pdfData) {
-  return pdfData.formImage.Pages[0].Texts.map(t => ({
-    x: t.x,
-    y: t.y + 0.2,
-    w: t.w,
-    str: decodeURIComponent(t.R[0].T)
-  }));
+  return pdfData.formImage.Pages[0].Texts.map(t => {
+    return {
+      x: t.x,
+      y: t.y + 0.2,
+      w: t.w,
+      fontSize: t.R[0].TS[1],
+      str: decodeURIComponent(t.R[0].T)
+    }
+  });
 }
 
 function splitText(text) {
