@@ -20,9 +20,9 @@ jobs:
         with:
           node-version: 12
       - name: Install dependencies
-        run:
-          - npm install semantic-release @semantic-release/git
-          - npm ci
+        run: |
+          npm install semantic-release @semantic-release/git
+          npm ci
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
