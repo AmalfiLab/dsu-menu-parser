@@ -112,8 +112,10 @@ function convertToRect(fill) {
 }
 
 function computeBoxes(lines, rows, cols) {
-  if (lines.length != rows*(2*cols + 1) + cols)
-    throw `Not enough lines to extract a ${rows} x ${cols} grid`;
+  if (lines.length != rows*(2*cols + 1) + cols) {
+    throw `Not enough lines to extract a ${rows} x ${cols} grid. ` + 
+          `Available lines ${lines.length}`;
+  }
 
   const sortedLines = lines.sort((a, b) => {
     if (a.y < b.y) return -1;
