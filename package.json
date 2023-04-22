@@ -11,7 +11,7 @@
   "license": "MIT",
   "dependencies": {
     "@dagrejs/graphlib": "^2.1.4",
-    "pdf2json": "^1.2.0"
+    "pdf2json": "^3.0.3"
   },
   "devDependencies": {
     "jimp": "^0.16.1"
